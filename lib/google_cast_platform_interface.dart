@@ -23,7 +23,19 @@ abstract class GoogleCastPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<String?> getPlatformVersion() {
-    throw UnimplementedError('platformVersion() has not been implemented.');
+  Future<dynamic> showConnectionDialog() {
+    throw UnimplementedError('showConnectionDialog() has not been implemented.');
+  }
+
+  Future<dynamic> isConnected() {
+    throw UnimplementedError('isConnected() has not been implemented.');
+  }
+
+  Future<dynamic> showControlDialog() {
+    throw UnimplementedError('showControlDialog() has not been implemented.');
+  }
+
+  Future<dynamic> startCasting(Map<String, dynamic> data) {
+    throw UnimplementedError('startCasting() has not been implemented.');
   }
 }

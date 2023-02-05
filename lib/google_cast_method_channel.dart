@@ -10,8 +10,22 @@ class MethodChannelGoogleCast extends GoogleCastPlatform {
   final methodChannel = const MethodChannel('google_cast');
 
   @override
-  Future<String?> getPlatformVersion() async {
-    final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
-    return version;
+  Future<dynamic> showConnectionDialog() async {
+    return await methodChannel.invokeMethod('show_connection_dialog');
+  }
+
+  @override
+  Future<dynamic> isConnected() async {
+    return await methodChannel.invokeMethod('is_connected');
+  }
+
+  @override
+  Future<dynamic> showControlDialog() async {
+    return await methodChannel.invokeMethod('show_control_dialog');
+  }
+
+  @override
+  Future<dynamic> startCasting(Map<String, dynamic> data) async {
+    return await methodChannel.invokeMethod('start_casting', data);
   }
 }

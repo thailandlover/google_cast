@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -19,32 +20,51 @@ class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
   final _googleCastPlugin = GoogleCast();
 
+  bool connected = false;
+
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+    _checkConnection();
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
-    try {
-      platformVersion =
-          await _googleCastPlugin.getPlatformVersion() ?? 'Unknown platform version';
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+  _showConnectionDialog() async {
+    var result = await _googleCastPlugin.showConnectionDialog();
+    if (kDebugMode) {
+      print("result: $result");
     }
+  }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
+  _checkConnection() async {
+    var result = await _googleCastPlugin.isConnected();
+    if (kDebugMode) {
+      print("result: $result");
+    }
     setState(() {
-      _platformVersion = platformVersion;
+      connected = result;
     });
+  }
+
+  _showControlDialog() async {
+    var result = await _googleCastPlugin.showControlDialog();
+    if (kDebugMode) {
+      print("result: $result");
+    }
+  }
+
+  _startCasting() async {
+    var result = await _googleCastPlugin.startCasting({
+      "title": "title",
+      "description": "here is the description",
+      "posterPhoto":
+      'https://thekee-m.gcdn.co/images06012022/uploads/media/series/posters/2022-09-27/0ObHcBVUnfpzbtIB.jpg',
+      "mediaUrl":
+      "https://thekee.gcdn.co/video/m-159n/English/Animation&Family/Baby.Shark.Best.Kids.Song/S01/01.mp4",
+      "playPosition": '50',
+    });
+    if (kDebugMode) {
+      print("result: $result");
+    }
   }
 
   @override
@@ -54,8 +74,28 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+        body: Column(
+          children: [
+            ElevatedButton(
+              onPressed: _checkConnection,
+              child: const Text('Check Connection'),
+            ),
+            Center(
+              child: Text('connected to cast device: $connected'),
+            ),
+            ElevatedButton(
+              onPressed: _showConnectionDialog,
+              child: const Text('Show Dialog'),
+            ),
+            ElevatedButton(
+              onPressed: _startCasting,
+              child: const Text('Start Casting'),
+            ),
+            ElevatedButton(
+              onPressed: _showControlDialog,
+              child: const Text('Show Control Dialog'),
+            ),
+          ],
         ),
       ),
     );
